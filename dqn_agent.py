@@ -51,6 +51,7 @@ class DQNAgent:
 
         self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
         self.loss_fn = nn.MSELoss()
+        self.last_loss = None
 
     def update_target(self):
         self.target_model.load_state_dict(self.model.state_dict())
@@ -95,6 +96,7 @@ class DQNAgent:
         loss = self.loss_fn(q_values, targets.detach())
         self.optimizer.zero_grad()
         loss.backward()
+        self.last_loss = loss.item()
         self.optimizer.step()
 
         # Epsilon decay
